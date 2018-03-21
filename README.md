@@ -1,5 +1,5 @@
 # Namegen
-Simple custom strings/names generator in Golang.
+Need some random strings? Looking for some weird names but have no imagination? Let Namegen find them for you, with your personal customizations. **Namegen is a simple custom strings/names generator written in Golang.**
 
 # Compiling
 Simply execute:
@@ -43,11 +43,11 @@ Help is provided by executing:
 namegen.exe [--help|-h]
 ```
 Available flags are:
-- alphabetmode: Enable strings/names generation using whole alphabet (Default: false).
-- length: Integer number that defines strings/names characters length (Default: 6).
-- number: Integer number indicating the number of strings/names to be generated (Default: 10, 0 for all the possible combinations).
-- random: Enable random strings/names generation (Default: true). Ignored if -number=0.
-- vowelsPos: Comma-separated list of integer numbers that define the vowel positions in strings/names (Example: -vowelPos=2,4,6).
+- **alphabetmode**: Enable strings/names generation using whole alphabet (Default: false).
+- **length**: Integer number that defines strings/names characters length (Default: 6).
+- **number**: Integer number indicating the number of strings/names to be generated (Default: 10, 0 for all the possible combinations).
+- **random**: Enable random strings/names generation (Default: true). Ignored if -number=0.
+- **vowelsPos**: Comma-separated list of integer numbers that define the vowel positions in strings/names (Example: -vowelPos=2,4,6).
 
 ## Example
 Generate 50 non-random (hence sequential-generated) strings/names with lenght of 5 chars. Second and fourth chars must be vowels, the others are consonants (since Alphabet Mode is false).
