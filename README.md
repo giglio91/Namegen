@@ -6,6 +6,7 @@ Simply execute:
 ```
 go build namegen.go
 ```
+in your personal Golang-ready OS.
 
 # Usage
 By default executing
