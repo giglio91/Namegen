@@ -119,3 +119,5 @@ babih
 babij
 babik
 ```
+# Notes
+1. When generating strings non-randomly in alphabet-only, the tool generates **26^length** strings. This means that in case of strings with length 5 the tool will generate 11,881,376 strings. **The tool prompts for a confirmation when asked to generate more than 200,000 strings.**
