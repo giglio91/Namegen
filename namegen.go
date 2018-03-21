@@ -1,5 +1,5 @@
 // go build namegen.go
-// USAGE: namegen.exe -length=4 -vowelsPos=5 -number=50 -random=false -alphabetmode=false > out.txt
+// USAGE: namegen.exe -length=5 -vowelsPos=2,4 -number=50 -random=false -alphabetmode=false > out.txt
 
 package main
 
@@ -7,11 +7,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"strconv"
-	//"os"
 	"log"
 	"math"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -24,7 +23,7 @@ var (
 	length                       *int
 	number                       *float64
 	vowelsPos                    interval
-	vocali, consonanti, alfabeto []string
+	vowels, consonants, alphabet []string
 )
 
 func (i *interval) String() string {
@@ -102,9 +101,9 @@ func genRndNames(totNames float64) {
 			pos := 1
 			for pos <= *length {
 				if isIntInInterval(pos, vowelsPos) {
-					name = name + vocali[rand.Intn(5)]
+					name = name + vowels[rand.Intn(5)]
 				} else {
-					name = name + alfabeto[rand.Intn(26)]
+					name = name + alphabet[rand.Intn(26)]
 				}
 
 				pos++
@@ -123,9 +122,9 @@ func genRndNames(totNames float64) {
 			pos := 1
 			for pos <= *length {
 				if isIntInInterval(pos, vowelsPos) {
-					name = name + vocali[rand.Intn(5)]
+					name = name + vowels[rand.Intn(5)]
 				} else {
-					name = name + consonanti[rand.Intn(21)]
+					name = name + consonants[rand.Intn(21)]
 				}
 
 				pos++
@@ -146,7 +145,7 @@ func genNames(totNames float64) {
 	//fmt.Println(totNames)
 	//fmt.Println(charpos)
 
-	puntatore := len(charpos) - 1
+	pointer := len(charpos) - 1
 
 	if *alphabetmode {
 		for i := 0.0; i < totNames; i++ {
@@ -154,7 +153,7 @@ func genNames(totNames float64) {
 
 			pos := 0
 			for pos < *length {
-				name = name + alfabeto[charpos[pos]]
+				name = name + alphabet[charpos[pos]]
 
 				pos++
 			}
@@ -165,7 +164,7 @@ func genNames(totNames float64) {
 
 			fmt.Println(name)
 
-			incrementaPosizioni(charpos, puntatore)
+			incrementPositions(charpos, pointer)
 		}
 	} else {
 		for i := 0.0; i < totNames; i++ {
@@ -174,9 +173,9 @@ func genNames(totNames float64) {
 			pos := 0
 			for pos < *length {
 				if isIntInInterval(pos+1, vowelsPos) {
-					name = name + vocali[charpos[pos]]
+					name = name + vowels[charpos[pos]]
 				} else {
-					name = name + consonanti[charpos[pos]]
+					name = name + consonants[charpos[pos]]
 				}
 
 				pos++
@@ -188,39 +187,39 @@ func genNames(totNames float64) {
 
 			fmt.Println(name)
 
-			incrementaPosizioni(charpos, puntatore)
+			incrementPositions(charpos, pointer)
 		}
 	}
 }
 
-func incrementaPosizioni(charpos []int, puntatore int) {
-	//fmt.Println(puntatore)
+func incrementPositions(charpos []int, pointer int) {
+	//fmt.Println(pointer)
 
-	if puntatore < 0 {
+	if pointer < 0 {
 		return
 	}
 
-	if !(*alphabetmode) && isIntInInterval(puntatore+1, vowelsPos) && charpos[puntatore] < 4 {
-		charpos[puntatore]++
-	} else if !(*alphabetmode) && isIntInInterval(puntatore+1, vowelsPos) && charpos[puntatore] >= 4 {
-		puntatore--
-		incrementaPosizioni(charpos, puntatore)
-		puntatore++
-		charpos[puntatore] = 0
-	} else if !(*alphabetmode) && !isIntInInterval(puntatore+1, vowelsPos) && charpos[puntatore] < 20 {
-		charpos[puntatore]++
-	} else if !(*alphabetmode) && !isIntInInterval(puntatore+1, vowelsPos) && charpos[puntatore] >= 20 {
-		puntatore--
-		incrementaPosizioni(charpos, puntatore)
-		puntatore++
-		charpos[puntatore] = 0
-	} else if (*alphabetmode) && charpos[puntatore] < 25 {
-		charpos[puntatore]++
-	} else if (*alphabetmode) && charpos[puntatore] >= 25 {
-		puntatore--
-		incrementaPosizioni(charpos, puntatore)
-		puntatore++
-		charpos[puntatore] = 0
+	if !(*alphabetmode) && isIntInInterval(pointer+1, vowelsPos) && charpos[pointer] < 4 {
+		charpos[pointer]++
+	} else if !(*alphabetmode) && isIntInInterval(pointer+1, vowelsPos) && charpos[pointer] >= 4 {
+		pointer--
+		incrementPositions(charpos, pointer)
+		pointer++
+		charpos[pointer] = 0
+	} else if !(*alphabetmode) && !isIntInInterval(pointer+1, vowelsPos) && charpos[pointer] < 20 {
+		charpos[pointer]++
+	} else if !(*alphabetmode) && !isIntInInterval(pointer+1, vowelsPos) && charpos[pointer] >= 20 {
+		pointer--
+		incrementPositions(charpos, pointer)
+		pointer++
+		charpos[pointer] = 0
+	} else if (*alphabetmode) && charpos[pointer] < 25 {
+		charpos[pointer]++
+	} else if (*alphabetmode) && charpos[pointer] >= 25 {
+		pointer--
+		incrementPositions(charpos, pointer)
+		pointer++
+		charpos[pointer] = 0
 	}
 }
 
@@ -232,25 +231,24 @@ func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
-// TODO LIMITATO A MAX 6 CARATTERI??? ===> 26 ^ 6 >>> INT?
-
 func main() {
 	random = flag.Bool("random", true, "Enable random strings/names generation (Default: true). Ignored if -number=0.")
 	alphabetmode = flag.Bool("alphabetmode", false, "Enable strings/names generation using whole alphabet (Default: false).")
-	length = flag.Int("length", 6, "Integer number that define strings/names characters length (Default: 6).")
+	length = flag.Int("length", 6, "Integer number that defines strings/names characters length (Default: 6).")
 	number = flag.Float64("number", 10, "Integer number indicating the number of strings/names to be generated (Default: 10, 0 for all the possible combinations).")
 
 	flag.Parse()
 
-	vocali = []string{"a", "e", "i", "o", "u"}
-	consonanti = []string{"b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"}
-	alfabeto = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+	vowels = []string{"a", "e", "i", "o", "u"}
+	consonants = []string{"b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"}
+	alphabet = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
 
 	fmt.Println("-------------------------------------------------------")
 	fmt.Println("---- STRINGS/NAMES GENERATOR BY Francesco Giglioli ----")
+	fmt.Println("----------------- github.com/giglio91 -----------------")
 	fmt.Println("-------------------------------------------------------\n")
-	//fmt.Println(vocali)
-	//fmt.Println(consonanti)
+	//fmt.Println(vowels)
+	//fmt.Println(consonants)
 	if *number == 0 {
 		fmt.Println("Random Mode: DISABLED (-number=0)")
 	} else {
